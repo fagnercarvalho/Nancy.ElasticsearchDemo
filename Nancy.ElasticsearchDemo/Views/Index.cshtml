@@ -1,0 +1,60 @@
+﻿@using System.Collections.Generic
+@using Nancy.ViewEngines.Razor
+@inherits NancyRazorViewBase<List<Nancy.ElasticsearchDemo.ViewModels.CountryVm>>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Country Search</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+
+    <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- history.js -->
+    <script src="@Url.Content("~/Content/jquery.history.js")"></script>
+</head>
+<body>
+    <div class="container-fluid" style="margin-top: 10px">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Search</h3>
+            </div>
+            <div class="panel-body">
+                <input placeholder="Search for a country" class="form-control" id="filter" />
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Results</h3>
+            </div>
+            <div class="panel-body">
+                <div id="results">
+                    @Html.Partial("Partials/_Results", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#filter').val(getParameterByName("q"));
+
+        $('#filter').on('keyup', function () {
+            History.pushState(null, null, "?q=" + $('#filter').val());
+
+            $.get("/countries?q=" + $('#filter').val(), function(data) {
+                $("#results").html(data);
+            });
+        });
+
+        function getParameterByName(name) {
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+</html>

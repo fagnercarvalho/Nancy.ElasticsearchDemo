@@ -1,0 +1,30 @@
+﻿@using System.Linq
+@using System.Collections.Generic
+@using Nancy.ViewEngines.Razor
+@inherits NancyRazorViewBase<List<Nancy.ElasticsearchDemo.ViewModels.CountryVm>>
+
+@if (!Model.Any())
+{
+    <div class="panel panel-default">
+        <div class="panel-body text-center">
+            <span style="color: gray">
+                <i class="glyphicon glyphicon-search"></i>
+                No records available.
+            </span>
+        </div>
+    </div>
+}
+
+@foreach (var country in @Model)
+{
+    <div class="media">
+        <div class="media-left">
+            <img class="media-object img-thumbnail img-responsive" src="@country.FlagUrl" alt="@country.Name"
+                 style="width: 140px">
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">@country.Name</h4>
+            @Html.Raw(@country.Hightlights)
+        </div>
+    </div>
+}
